@@ -51,6 +51,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('admin/register', 'Adminauth\AuthController@showRegistrationForm');
     Route::post('admin/register', 'Adminauth\AuthController@register');
 
-    Route::get('/admin', 'Admin\Employee@index');
-    Route::get('/admin/dashboard','Admin\Employee@test123');
+    Route::get('/admin', 'Admin\AdminController@admin_dashboard');
+    Route::get('/admin/dashboard','Admin\AdminController@admin_dashboard');
+    Route::get('/admin/tasks','Admin\AdminController@admin_tasks_list');
 });

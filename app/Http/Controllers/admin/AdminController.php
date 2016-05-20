@@ -1,48 +1,78 @@
 <?php
-namespace App\Http\Controllers;
 
+namespace App\Http\Controllers\admin;
+
+use App\User;
+use App\Task;
 use Illuminate\Http\Request;
-
+use Illuminate\Routing\Controller;
 use App\Http\Requests;
+use Auth;
+use App\Admin;
+use DB;
 
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\View;
 
- 
 class AdminController extends Controller
 {
-    /**
-   * Function to retrieve the index page
-   */
     
-  public function index()
-  {
-    $errors = "None";
-    return view('admin/login')->with('errors', $errors);
-  }
-  
-  /**
-   * Function to attempt authorization, and redirect to admin page if successful, redirect to login with errors if not
-   */
-  public function login()
-  {
-    $input = Input::all();
-    if (Auth::attempt(array('username' => $input['username'], 'password' => $input['password'] ))) {
-      return redirect('admin/appointments');
-    } else {
-      $errors = "Invalid username or password";
-      return view('admin/login')->with('errors', $errors);
+    public function __construct() {
+        $this->middleware('admin');
     }
-  }
 
-  public function appointments()
-  {
-    return view('admin/appointments');
-  }
-  
-  
+    public function index() {
+        return view('admin.home');
+    }
+    
+    public function admin_dashboard(){
+      return view('admin.dashboard');
+    }
+    
+    public function admin_tasks_list(){
+        //$tasks = DB::table('tasks')->join('users', 'tasks.user_id', '=', 'users.id')->get();
+        
+        //$tasks = Task::find(2)->Task()->User()->get();
+        //$users = $tasks->user;
+        $tasks = Task::with('user')->get();
+        $users = User::get();
+        //dd($users);
+      //$tasks = Task::with('user')->get();
+      //echo $tasks->user()->username;
+      //dd($tasks);
+      return view('admin.task', array(
+            'tasks' => $tasks,
+            'users' => $users
+            ));
+      //['tasks' => Task::with('user')->get()]);
+    }
+    
+    
+/**
+ * Function to retrieve the index page
+ */
+//public function index()
+//{
+//$errors = "None";
+//return view('admin/login')->with('errors', $errors);
+//}
 
+/**
+ * Function to attempt authorization, and redirect to admin page if successful, redirect to login with errors if not
+ */
+//public function login()
+//{
+//$input = Input::all();
+//    if (Auth::attempt(array('username' => $input['username'], 'password' => $input['password'] ))) {
+//      return redirect('admin/appointments');
+//    } else {
+//      $errors = "Invalid username or password";
+//      return view('admin/login')->with('errors', $errors);
+//}
+//}
+
+//  public function appointments()
+//  {
+//    return view('admin/appointments');
+//  }
 //  public function availability()
 //  {
 //    return view('admin/availability');
